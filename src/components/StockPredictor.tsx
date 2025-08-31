@@ -1,53 +1,49 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, DollarSign, Calendar, AlertCircle } from 'lucide-react';
 import StockChart from './StockChart';
-
-interface StockData {
-  symbol: string;
-  currentPrice: number;
-  predictedPrice: number;
-  confidence: number;
-  trend: 'up' | 'down' | 'stable';
-  historicalData: Array<{ date: string; price: number }>;
-}
+import { stockApi, StockData } from '../services/stockApi';
 
 const StockPredictor: React.FC = () => {
   const [stockSymbol, setStockSymbol] = useState('');
   const [predictionDays, setPredictionDays] = useState(30);
   const [stockData, setStockData] = useState<StockData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  // Mock stock data for demonstration
-  const mockStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+  // Popular stock symbols for suggestions
+  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+
+  const handleSearch = async (query: string) => {
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const results = await stockApi.searchStocks(query);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  };
 
   const predictStock = async () => {
     if (!stockSymbol) return;
     
     setLoading(true);
+    setError(null);
     
-    // Simulate API call
-    setTimeout(() => {
-      const currentPrice = Math.random() * 500 + 50;
-      const changePercent = (Math.random() - 0.5) * 40; // -20% to +20%
-      const predictedPrice = currentPrice * (1 + changePercent / 100);
-      const confidence = Math.random() * 30 + 70; // 70-100%
-      
-      const historicalData = Array.from({ length: 30 }, (_, i) => ({
-        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        price: currentPrice * (1 + (Math.random() - 0.5) * 0.1)
-      }));
-
-      setStockData({
-        symbol: stockSymbol.toUpperCase(),
-        currentPrice,
-        predictedPrice,
-        confidence,
-        trend: changePercent > 5 ? 'up' : changePercent < -5 ? 'down' : 'stable',
-        historicalData
-      });
+    try {
+      const data = await stockApi.getStockData(stockSymbol, predictionDays);
+      setStockData(data);
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch stock data. Please try again.');
+      setStockData(null);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const getTrendColor = (trend: string) => {
@@ -77,7 +73,7 @@ const StockPredictor: React.FC = () => {
           Stock Price Predictor
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Get AI-powered predictions for stock prices and make informed investment decisions. 
+          Get AI-powered predictions for stock prices using real-time market data. 
           Our advanced algorithms analyze market trends, historical data, and market sentiment.
         </p>
       </motion.div>
@@ -99,16 +95,38 @@ const StockPredictor: React.FC = () => {
               <input
                 type="text"
                 value={stockSymbol}
-                onChange={(e) => setStockSymbol(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  const value = e.target.value.toUpperCase();
+                  setStockSymbol(value);
+                  handleSearch(value);
+                }}
                 placeholder="Enter stock symbol (e.g., AAPL)"
                 className="input-field pl-10"
                 list="stock-suggestions"
               />
               <datalist id="stock-suggestions">
-                {mockStocks.map(stock => (
+                {popularStocks.map(stock => (
                   <option key={stock} value={stock} />
                 ))}
               </datalist>
+              
+              {/* Search Results Dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                  {searchResults.map((symbol) => (
+                    <button
+                      key={symbol}
+                      onClick={() => {
+                        setStockSymbol(symbol);
+                        setSearchResults([]);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                    >
+                      {symbol}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -153,6 +171,20 @@ const StockPredictor: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* Error Message */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 max-w-2xl mx-auto"
+        >
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <p className="text-red-800 dark:text-red-200">{error}</p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Results Section */}
       {stockData && (
         <motion.div
@@ -161,8 +193,8 @@ const StockPredictor: React.FC = () => {
           transition={{ delay: 0.2 }}
           className="space-y-6"
         >
-          {/* Prediction Summary */}
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Real-time Quote Summary */}
+          <div className="grid md:grid-cols-4 gap-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -174,7 +206,10 @@ const StockPredictor: React.FC = () => {
                 Current Price
               </h3>
               <p className="text-2xl font-bold text-primary-600">
-                ${stockData.currentPrice.toFixed(2)}
+                ${stockData.quote.currentPrice.toFixed(2)}
+              </p>
+              <p className={`text-sm ${stockData.quote.change >= 0 ? 'text-success-600' : 'text-danger-600'}`}>
+                {stockData.quote.change >= 0 ? '+' : ''}{stockData.quote.change.toFixed(2)} ({stockData.quote.changePercent.toFixed(2)}%)
               </p>
             </motion.div>
 
@@ -190,6 +225,9 @@ const StockPredictor: React.FC = () => {
               </h3>
               <p className={`text-2xl font-bold ${getTrendColor(stockData.trend)}`}>
                 ${stockData.predictedPrice.toFixed(2)}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                in {predictionDays} days
               </p>
             </motion.div>
 
@@ -209,13 +247,82 @@ const StockPredictor: React.FC = () => {
                 {stockData.trend.toUpperCase()}
               </p>
             </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 }}
+              className="card p-6 text-center"
+            >
+              <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center">
+                <div className="w-6 h-6 border-2 border-primary-600 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-primary-600">{stockData.confidence.toFixed(0)}%</span>
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                Confidence
+              </h3>
+              <p className="text-lg font-bold text-primary-600">
+                {stockData.confidence.toFixed(1)}%
+              </p>
+            </motion.div>
           </div>
+
+          {/* Market Data */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="card p-6"
+          >
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Market Data
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Open</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  ${stockData.quote.open.toFixed(2)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">High</p>
+                <p className="text-lg font-semibold text-success-600">
+                  ${stockData.quote.high.toFixed(2)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Low</p>
+                <p className="text-lg font-semibold text-danger-600">
+                  ${stockData.quote.low.toFixed(2)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Volume</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {stockData.quote.volume.toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Previous Close</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  ${stockData.quote.previousClose.toFixed(2)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Market Cap</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Real-time data
+                </p>
+              </div>
+            </div>
+          </motion.div>
 
           {/* Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.8 }}
             className="card p-6"
           >
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -228,7 +335,7 @@ const StockPredictor: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.9 }}
             className="card p-6"
           >
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -256,10 +363,10 @@ const StockPredictor: React.FC = () => {
                 </h4>
                 <p className="text-gray-600 dark:text-gray-400">
                   {stockData.trend === 'up' 
-                    ? 'Consider buying - positive growth expected'
+                    ? 'Consider buying - positive growth expected based on current market trends'
                     : stockData.trend === 'down'
-                    ? 'Consider selling or wait - decline expected'
-                    : 'Hold position - stable performance expected'
+                    ? 'Consider selling or wait - decline expected based on market analysis'
+                    : 'Hold position - stable performance expected in the near term'
                   }
                 </p>
               </div>

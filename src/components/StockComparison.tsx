@@ -1,54 +1,46 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, TrendingUp, TrendingDown, BarChart3, Target } from 'lucide-react';
-
-interface StockComparisonData {
-  symbol: string;
-  currentPrice: number;
-  predictedPrice: number;
-  predictedReturn: number;
-  risk: 'low' | 'medium' | 'high';
-  confidence: number;
-  recommendation: 'buy' | 'sell' | 'hold';
-}
+import { Plus, X, TrendingUp, TrendingDown, BarChart3, Target, AlertCircle } from 'lucide-react';
+import { stockApi, StockComparisonData } from '../services/stockApi';
 
 const StockComparison: React.FC = () => {
   const [stocks, setStocks] = useState<StockComparisonData[]>([]);
   const [newStock, setNewStock] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  const mockStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+
+  const handleSearch = async (query: string) => {
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const results = await stockApi.searchStocks(query);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  };
 
   const addStock = async () => {
     if (!newStock || stocks.find(s => s.symbol === newStock.toUpperCase())) return;
     
     setLoading(true);
+    setError(null);
     
-    // Simulate API call
-    setTimeout(() => {
-      const currentPrice = Math.random() * 500 + 50;
-      const changePercent = (Math.random() - 0.5) * 40;
-      const predictedPrice = currentPrice * (1 + changePercent / 100);
-      const predictedReturn = changePercent;
-      const confidence = Math.random() * 30 + 70;
-      
-      const riskLevels: ('low' | 'medium' | 'high')[] = ['low', 'medium', 'high'];
-      const recommendations: ('buy' | 'sell' | 'hold')[] = ['buy', 'sell', 'hold'];
-      
-      const stockData: StockComparisonData = {
-        symbol: newStock.toUpperCase(),
-        currentPrice,
-        predictedPrice,
-        predictedReturn,
-        risk: riskLevels[Math.floor(Math.random() * 3)],
-        confidence,
-        recommendation: recommendations[Math.floor(Math.random() * 3)]
-      };
-      
+    try {
+      const stockData = await stockApi.getStockComparisonData(newStock);
       setStocks([...stocks, stockData]);
       setNewStock('');
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch stock data. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const removeStock = (symbol: string) => {
@@ -91,7 +83,7 @@ const StockComparison: React.FC = () => {
           Stock Comparison
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Compare multiple stocks side by side to find the best investment opportunities. 
+          Compare multiple stocks side by side using real-time market data to find the best investment opportunities. 
           Analyze predicted returns, risk levels, and get personalized recommendations.
         </p>
       </motion.div>
@@ -104,20 +96,42 @@ const StockComparison: React.FC = () => {
         className="card p-6 max-w-2xl mx-auto"
       >
         <div className="flex gap-4">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <input
               type="text"
               value={newStock}
-              onChange={(e) => setNewStock(e.target.value.toUpperCase())}
+              onChange={(e) => {
+                const value = e.target.value.toUpperCase();
+                setNewStock(value);
+                handleSearch(value);
+              }}
               placeholder="Enter stock symbol (e.g., AAPL)"
               className="input-field"
               list="comparison-stocks"
             />
             <datalist id="comparison-stocks">
-              {mockStocks.map(stock => (
+              {popularStocks.map(stock => (
                 <option key={stock} value={stock} />
               ))}
             </datalist>
+            
+            {/* Search Results Dropdown */}
+            {searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                {searchResults.map((symbol) => (
+                  <button
+                    key={symbol}
+                    onClick={() => {
+                      setNewStock(symbol);
+                      setSearchResults([]);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    {symbol}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <motion.button
             onClick={addStock}
@@ -140,6 +154,20 @@ const StockComparison: React.FC = () => {
           </motion.button>
         </div>
       </motion.div>
+
+      {/* Error Message */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 max-w-2xl mx-auto"
+        >
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <p className="text-red-800 dark:text-red-200">{error}</p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Best Investment Recommendation */}
       {stocks.length > 0 && (
@@ -165,11 +193,18 @@ const StockComparison: React.FC = () => {
                   Predicted Return: {getBestInvestment()!.predictedReturn > 0 ? '+' : ''}
                   {getBestInvestment()!.predictedReturn.toFixed(2)}%
                 </p>
+                <p className="text-sm text-gray-500">
+                  Current: ${getBestInvestment()!.quote.currentPrice.toFixed(2)} 
+                  ({getBestInvestment()!.quote.change >= 0 ? '+' : ''}{getBestInvestment()!.quote.changePercent.toFixed(2)}%)
+                </p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Current Price</p>
                 <p className="text-lg font-bold text-primary-600">
                   ${getBestInvestment()!.currentPrice.toFixed(2)}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Volume: {getBestInvestment()!.quote.volume.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -194,6 +229,7 @@ const StockComparison: React.FC = () => {
                 <tr className="border-b border-gray-200 dark:border-gray-700">
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Stock</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Current Price</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Change</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Predicted Price</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Return</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Risk</th>
@@ -225,6 +261,13 @@ const StockComparison: React.FC = () => {
                     </td>
                     <td className="py-4 px-4 text-gray-900 dark:text-white">
                       ${stock.currentPrice.toFixed(2)}
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className={`font-semibold ${
+                        stock.quote.change >= 0 ? 'text-success-600' : 'text-danger-600'
+                      }`}>
+                        {stock.quote.change >= 0 ? '+' : ''}{stock.quote.change.toFixed(2)} ({stock.quote.changePercent.toFixed(2)}%)
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-gray-900 dark:text-white">
                       ${stock.predictedPrice.toFixed(2)}
@@ -290,7 +333,7 @@ const StockComparison: React.FC = () => {
             No Stocks Added
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Add stocks above to start comparing their performance and predictions.
+            Add stocks above to start comparing their performance and predictions using real-time market data.
           </p>
         </motion.div>
       )}
