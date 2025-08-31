@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, TrendingUp, TrendingDown, DollarSign, AlertCircle, BarChart3, Target, Activity } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, DollarSign, AlertCircle, BarChart3, Target, Activity, Zap } from 'lucide-react';
 import StockChart from './StockChart';
 import { stockApi, StockData } from '../services/stockApi';
 
@@ -68,9 +68,14 @@ const StockPredictor: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-          Market Analysis & Predictions
-        </h2>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-emerald-600 rounded-2xl flex items-center justify-center shadow-xl">
+            <Zap className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-4xl font-bold gradient-text">
+            Market Analysis & Predictions
+          </h2>
+        </div>
         <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto text-lg">
           Advanced technical analysis and predictive modeling for informed investment decisions. 
           Leverage sophisticated algorithms to analyze market trends and forecast price movements.
@@ -82,7 +87,7 @@ const StockPredictor: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 max-w-4xl mx-auto"
+        className="glass rounded-2xl p-8 max-w-4xl mx-auto shadow-2xl backdrop-blur-sm"
       >
         <div className="space-y-6">
           <div>
@@ -100,7 +105,7 @@ const StockPredictor: React.FC = () => {
                   handleSearch(value);
                 }}
                 placeholder="Enter ticker symbol (e.g., AAPL, MSFT, TSLA)"
-                className="w-full pl-12 pr-4 py-4 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-12 pr-4 py-4 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/80 dark:bg-slate-700/80 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
                 list="stock-suggestions"
               />
               <datalist id="stock-suggestions">
@@ -111,7 +116,7 @@ const StockPredictor: React.FC = () => {
               
               {/* Search Results Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-10 max-h-48 overflow-y-auto backdrop-blur-sm">
                   {searchResults.map((symbol) => (
                     <button
                       key={symbol}
@@ -119,7 +124,7 @@ const StockPredictor: React.FC = () => {
                         setStockSymbol(symbol);
                         setSearchResults([]);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0"
+                      className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0 transition-colors duration-200"
                     >
                       {symbol}
                     </button>
@@ -151,7 +156,7 @@ const StockPredictor: React.FC = () => {
           <motion.button
             onClick={predictStock}
             disabled={!stockSymbol || loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-lg flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-emerald-600 hover:from-blue-700 hover:via-blue-800 hover:to-emerald-700 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:scale-[1.02]"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -175,7 +180,7 @@ const StockPredictor: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-4xl mx-auto"
+          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 max-w-4xl mx-auto"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-600" />
@@ -198,7 +203,7 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
+              className="glass rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm card-hover"
             >
               <DollarSign className="w-8 h-8 text-blue-600 mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -218,7 +223,7 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
-              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
+              className="glass rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm card-hover"
             >
               <Target className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -236,7 +241,7 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
+              className="glass rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm card-hover"
             >
               <div className="w-8 h-8 mx-auto mb-3 flex items-center justify-center">
                 {getTrendIcon(stockData.trend)}
@@ -253,7 +258,7 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
-              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
+              className="glass rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm card-hover"
             >
               <Activity className="w-8 h-8 text-purple-600 mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -264,7 +269,7 @@ const StockPredictor: React.FC = () => {
               </p>
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mt-2">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-lg transition-all duration-500"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${stockData.confidence}%` }}
                 ></div>
               </div>
@@ -276,7 +281,7 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
+            className="glass rounded-2xl p-8 shadow-xl backdrop-blur-sm"
           >
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
               Market Data
@@ -350,7 +355,7 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
+            className="glass rounded-2xl p-8 shadow-xl backdrop-blur-sm"
           >
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
               Price History & Forecast
@@ -363,7 +368,7 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
+            className="glass rounded-2xl p-8 shadow-xl backdrop-blur-sm"
           >
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
               Technical Analysis & Recommendations

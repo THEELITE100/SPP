@@ -79,9 +79,14 @@ const StockComparison: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-          Portfolio Analysis & Comparison
-        </h2>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl">
+            <PieChart className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-4xl font-bold gradient-text">
+            Portfolio Analysis & Comparison
+          </h2>
+        </div>
         <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto text-lg">
           Comprehensive portfolio analysis and side-by-side comparison of multiple securities. 
           Evaluate risk profiles, performance metrics, and investment opportunities across your portfolio.
@@ -93,7 +98,7 @@ const StockComparison: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 max-w-4xl mx-auto"
+        className="glass rounded-2xl p-8 max-w-4xl mx-auto shadow-2xl backdrop-blur-sm"
       >
         <div className="flex gap-4">
           <div className="flex-1 relative">
@@ -106,7 +111,7 @@ const StockComparison: React.FC = () => {
                 handleSearch(value);
               }}
               placeholder="Enter ticker symbol (e.g., AAPL, MSFT, TSLA)"
-              className="w-full px-4 py-4 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              className="w-full px-4 py-4 border border-slate-300 dark:border-slate-600 rounded-xl bg-white/80 dark:bg-slate-700/80 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
               list="comparison-stocks"
             />
             <datalist id="comparison-stocks">
@@ -117,7 +122,7 @@ const StockComparison: React.FC = () => {
             
             {/* Search Results Dropdown */}
             {searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-10 max-h-48 overflow-y-auto backdrop-blur-sm">
                 {searchResults.map((symbol) => (
                   <button
                     key={symbol}
@@ -125,7 +130,7 @@ const StockComparison: React.FC = () => {
                       setNewStock(symbol);
                       setSearchResults([]);
                     }}
-                    className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0"
+                    className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0 transition-colors duration-200"
                   >
                     {symbol}
                   </button>
@@ -136,7 +141,7 @@ const StockComparison: React.FC = () => {
           <motion.button
             onClick={addStock}
             disabled={!newStock || loading}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-lg flex items-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-blue-600 hover:from-emerald-700 hover:via-emerald-800 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl flex items-center gap-3 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:scale-[1.02]"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -160,7 +165,7 @@ const StockComparison: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-4xl mx-auto"
+          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 max-w-4xl mx-auto"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-600" />
@@ -175,10 +180,12 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-8 max-w-4xl mx-auto"
+          className="glass rounded-2xl p-8 max-w-4xl mx-auto shadow-2xl backdrop-blur-sm border border-emerald-200 dark:border-emerald-700"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Target className="w-7 h-7 text-emerald-600" />
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Target className="w-5 h-5 text-white" />
+            </div>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
               Top Investment Opportunity
             </h3>
@@ -218,7 +225,7 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 overflow-x-auto"
+          className="glass rounded-2xl p-8 shadow-2xl backdrop-blur-sm overflow-x-auto"
         >
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">
             Portfolio Analysis
@@ -245,11 +252,11 @@ const StockComparison: React.FC = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * index }}
-                    className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    className="border-b border-slate-100 dark:border-slate-800 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors duration-200"
                   >
                     <td className="py-6 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                           <span className="text-sm font-bold text-white">
                             {stock.symbol.charAt(0)}
                           </span>
@@ -338,9 +345,11 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-16 text-center"
+          className="glass rounded-2xl p-16 text-center shadow-2xl backdrop-blur-sm"
         >
-          <PieChart className="w-20 h-20 text-slate-400 mx-auto mb-6" />
+          <div className="w-24 h-24 bg-gradient-to-br from-slate-400 to-slate-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+            <PieChart className="w-12 h-12 text-white" />
+          </div>
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
             No Securities Added
           </h3>

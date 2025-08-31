@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sun, Moon, BarChart3 } from 'lucide-react';
+import { Sun, Moon, BarChart3, TrendingUp } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Header: React.FC = () => {
@@ -10,7 +10,7 @@ const Header: React.FC = () => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="bg-white dark:bg-slate-900 shadow-lg border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
+      className="glass sticky top-0 z-50 backdrop-blur-md border-b border-white/20 dark:border-slate-700/20"
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
@@ -19,15 +19,20 @@ const Header: React.FC = () => {
             className="flex items-center gap-4"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-              <BarChart3 className="w-7 h-7 text-white" />
+            <div className="relative">
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-600 via-blue-700 to-emerald-600 rounded-2xl flex items-center justify-center shadow-2xl">
+                <BarChart3 className="w-8 h-8 text-white" />
+              </div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                <TrendingUp className="w-3 h-3 text-white" />
+              </div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h1 className="text-3xl font-bold gradient-text">
                 Market Analytics Pro
               </h1>
               <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                Professional Investment Analysis Platform
+                Advanced Investment Analysis Platform
               </p>
             </div>
           </motion.div>
@@ -35,15 +40,15 @@ const Header: React.FC = () => {
           {/* Theme Toggle */}
           <motion.button
             onClick={toggleTheme}
-            className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 shadow-md"
-            whileHover={{ scale: 1.05 }}
+            className="p-4 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-slate-700/20"
+            whileHover={{ scale: 1.05, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Toggle theme"
           >
             {isDarkMode ? (
-              <Sun className="w-5 h-5 text-amber-500" />
+              <Sun className="w-6 h-6 text-amber-500" />
             ) : (
-              <Moon className="w-5 h-5 text-slate-700" />
+              <Moon className="w-6 h-6 text-slate-700" />
             )}
           </motion.button>
         </div>
