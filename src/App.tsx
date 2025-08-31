@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import StockPredictor from './components/StockPredictor';
@@ -10,38 +10,44 @@ function App() {
   const [activeTab, setActiveTab] = useState('predictor');
 
   const tabs = [
-    { id: 'predictor', name: 'Stock Predictor', icon: '📈' },
-    { id: 'comparison', name: 'Stock Comparison', icon: '⚖️' },
-    { id: 'calculator', name: 'Profit/Loss Calculator', icon: '💰' },
+    { id: 'predictor', name: 'Market Analysis', icon: '📊' },
+    { id: 'comparison', name: 'Portfolio Analysis', icon: '⚖️' },
+    { id: 'calculator', name: 'Risk Assessment', icon: '💰' },
   ];
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-200">
         <Header />
         
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-6 py-8">
           {/* Tab Navigation */}
-          <div className="flex flex-wrap gap-2 mb-8 justify-center">
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="text-lg">{tab.icon}</span>
-                <span className="hidden sm:inline">{tab.name}</span>
-              </motion.button>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center mb-8"
+          >
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-2">
+              {tabs.map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                    activeTab === tab.id
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="mr-2">{tab.icon}</span>
+                  {tab.name}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
 
-          {/* Content */}
+          {/* Tab Content */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

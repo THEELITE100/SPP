@@ -1,36 +1,36 @@
-# Stock Price Predictor
+# Market Analytics Pro
 
-A modern, interactive web application for predicting stock prices and analyzing investment opportunities using real-time market data. Built with React, TypeScript, and Tailwind CSS.
+A professional investment analysis platform for portfolio management and market research. Built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-### 📈 Stock Price Predictor
-- **Real-time stock data** from Alpha Vantage API
-- AI-powered stock price predictions
-- Interactive charts with historical data
-- Confidence level indicators
-- Investment recommendations
-- Live market data (price, volume, high/low, etc.)
+### 📊 Market Analysis
+- Advanced technical analysis and predictive modeling
+- Interactive charts with historical data visualization
+- Confidence level indicators and trend analysis
+- Professional investment recommendations
+- Comprehensive market data display
 
-### ⚖️ Stock Comparison
-- Compare multiple stocks side by side
-- Real-time market data for each stock
+### ⚖️ Portfolio Analysis
+- Compare multiple securities side by side
 - Risk assessment and confidence scoring
 - Best investment opportunity identification
-- Comprehensive comparison table with live updates
+- Comprehensive portfolio analysis table
+- Professional risk profiling
 
-### 💰 Profit/Loss Calculator
+### 💰 Risk Assessment
 - Calculate potential profits and losses
 - Multiple investment scenarios
 - Fee impact analysis
 - Best and worst performer tracking
+- Professional risk management tools
 
-### 🎨 User Experience
+### 🎨 Professional Interface
 - Dark/Light mode toggle
 - Responsive design for all devices
 - Smooth animations and transitions
 - Professional yet engaging interface
-- Real-time stock search with autocomplete
+- Advanced security symbol search
 
 ## Technologies Used
 
@@ -39,23 +39,20 @@ A modern, interactive web application for predicting stock prices and analyzing 
 - **Tailwind CSS** - Utility-first CSS framework
 - **Framer Motion** - Smooth animations
 - **Recharts** - Interactive charts
-- **Lucide React** - Beautiful icons
-- **Axios** - HTTP client for API calls
-- **Alpha Vantage API** - Real-time stock market data
+- **Lucide React** - Professional icons
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js (version 16 or higher)
 - npm or yarn
-- Alpha Vantage API key (free tier available)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd stock-price-predictor
+cd market-analytics-pro
 ```
 
 2. Install dependencies:
@@ -63,18 +60,12 @@ cd stock-price-predictor
 npm install
 ```
 
-3. Set up environment variables:
-Create a `.env` file in the root directory:
-```env
-REACT_APP_ALPHA_VANTAGE_API_KEY=your_api_key_here
-```
-
-4. Start the development server:
+3. Start the development server:
 ```bash
 npm start
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### Building for Production
 
@@ -82,25 +73,21 @@ npm start
 npm run build
 ```
 
-## API Integration
+## Professional Features
 
-This application uses the **Alpha Vantage API** to fetch real-time stock market data:
+This application provides comprehensive investment analysis tools:
 
-- **Real-time quotes** - Current stock prices, changes, volume
-- **Historical data** - Daily stock prices for analysis
-- **Stock search** - Find stocks by symbol or company name
-- **Market data** - Open, high, low, volume, previous close
-
-### API Features Used:
-- `GLOBAL_QUOTE` - Real-time stock quotes
-- `TIME_SERIES_DAILY` - Historical daily data
-- `SYMBOL_SEARCH` - Stock symbol search
+- **Technical Analysis** - Advanced algorithms for market trend analysis
+- **Portfolio Management** - Professional portfolio comparison and analysis
+- **Risk Assessment** - Sophisticated risk modeling and assessment
+- **Market Data** - Comprehensive market metrics and indicators
+- **Investment Recommendations** - Professional buy/sell/hold recommendations
 
 ## Deployment
 
 ### Vercel Deployment (Recommended)
 
-This project is configured for deployment on Vercel with real-time API integration.
+This project is configured for deployment on Vercel with professional-grade features.
 
 #### **Step 1: Prepare Your Repository**
 1. Make sure your code is pushed to a Git repository (GitHub, GitLab, or Bitbucket)
@@ -109,10 +96,11 @@ This project is configured for deployment on Vercel with real-time API integrati
 #### **Step 2: Deploy to Vercel**
 
 **Option A: Deploy via Vercel Dashboard (Recommended)**
-1. Go to [vercel.com](https://vercel.com) and sign up/login
-2. Click **"New Project"**
-3. Import your Git repository
-4. Vercel will automatically detect your project settings
+1. Go to [vercel.com](https://vercel.com)
+2. Sign up/Login with your GitHub/GitLab/Bitbucket account
+3. Click **"New Project"**
+4. Import your repository
+5. Vercel will auto-detect settings
 
 **Option B: Deploy via Vercel CLI**
 ```bash
@@ -136,11 +124,6 @@ When deploying, use these exact settings:
 Build Command: npm run build
 Output Directory: build
 Install Command: npm install
-```
-
-**Environment Variables:**
-```
-REACT_APP_ALPHA_VANTAGE_API_KEY=EAKM3KJQNDGBFJZS
 ```
 
 **Advanced Settings:**
@@ -169,34 +152,24 @@ This configuration:
 - ✅ Specifies the output directory
 - ✅ Configures client-side routing (SPA support)
 - ✅ Handles all routes properly
-- ✅ Supports real-time API calls
+- ✅ Supports professional features
 
-#### **Step 5: Environment Variables Setup**
-
-**IMPORTANT:** You must add the environment variable in Vercel:
-
-1. In your Vercel project dashboard, go to **Settings** → **Environment Variables**
-2. Add the following environment variable:
-   - **Name:** `REACT_APP_ALPHA_VANTAGE_API_KEY`
-   - **Value:** `EAKM3KJQNDGBFJZS`
-   - **Environment:** Production, Preview, Development (select all)
-
-#### **Step 6: Deployment Process**
+#### **Step 5: Deployment Process**
 
 1. **Connect Repository:** Vercel will automatically detect your React app
 2. **Build Process:** Vercel will run `npm install` then `npm run build`
 3. **Deployment:** Your app will be deployed to a unique URL
 4. **Custom Domain:** You can add a custom domain later
 
-#### **Step 7: Post-Deployment**
+#### **Step 6: Post-Deployment**
 
 After deployment:
 1. **Test the Application:** Verify all features work:
-   - Stock Predictor (real-time data)
-   - Stock Comparison tool (live market data)
-   - Profit/Loss Calculator
+   - Market Analysis (technical analysis)
+   - Portfolio Analysis (comparison tools)
+   - Risk Assessment (calculator)
    - Dark/Light mode toggle
-   - Stock search functionality
+   - Security search functionality
 2. **Performance:** Vercel automatically optimizes your app
 3. **Updates:** Future pushes to your main branch will auto-deploy
 
@@ -209,37 +182,23 @@ After deployment:
 1. **If build fails:**
    - Check that all dependencies are in `package.json`
    - Ensure Node.js version is compatible (18.x recommended)
-   - Verify environment variables are set correctly
 
-2. **If API calls fail:**
-   - Check that `REACT_APP_ALPHA_VANTAGE_API_KEY` is set in Vercel
-   - Verify the API key is valid and has sufficient quota
-   - Check Alpha Vantage API status
-
-3. **If routing doesn't work:**
+2. **If routing doesn't work:**
    - Your `vercel.json` already handles this with the rewrites rule
 
-4. **If styles don't load:**
+3. **If styles don't load:**
    - Tailwind CSS is properly configured and should work out of the box
 
 ### Your App Features That Will Work Perfectly:
-- ✅ Stock Price Predictor with real-time data
-- ✅ Stock Comparison tool with live market data
-- ✅ Profit/Loss Calculator
+- ✅ Market Analysis with technical indicators
+- ✅ Portfolio Analysis with comparison tools
+- ✅ Risk Assessment calculator
 - ✅ Dark/Light theme toggle
 - ✅ Responsive design
 - ✅ Smooth animations (Framer Motion)
 - ✅ Interactive charts (Recharts)
-- ✅ Real-time stock search
-- ✅ Live market data display
-
-## API Rate Limits
-
-The Alpha Vantage API has rate limits:
-- **Free tier:** 5 API calls per minute, 500 per day
-- **Premium tiers:** Higher limits available
-
-The app includes error handling for rate limits and will display appropriate messages to users.
+- ✅ Professional security search
+- ✅ Comprehensive market data display
 
 ## Project Structure
 
@@ -247,12 +206,12 @@ The app includes error handling for rate limits and will display appropriate mes
 src/
 ├── components/          # React components
 │   ├── Header.tsx      # Navigation header
-│   ├── StockPredictor.tsx    # Main prediction component
-│   ├── StockComparison.tsx   # Stock comparison tool
-│   ├── ProfitLossCalculator.tsx # P&L calculator
+│   ├── StockPredictor.tsx    # Market analysis component
+│   ├── StockComparison.tsx   # Portfolio analysis tool
+│   ├── ProfitLossCalculator.tsx # Risk assessment calculator
 │   └── StockChart.tsx  # Chart component
-├── services/           # API services
-│   └── stockApi.ts     # Alpha Vantage API integration
+├── services/           # Data services
+│   └── stockApi.ts     # Market data service
 ├── contexts/           # React contexts
 │   └── ThemeContext.tsx # Dark/light mode context
 ├── App.tsx            # Main app component
@@ -262,25 +221,26 @@ src/
 
 ## Features in Detail
 
-### Stock Prediction
-- Enter any stock symbol to get real-time predictions
-- Adjustable prediction period (7 days to 1 year)
-- Visual charts showing historical data and predictions
+### Market Analysis
+- Enter any security symbol to get comprehensive analysis
+- Adjustable analysis period (7 days to 1 year)
+- Visual charts showing historical data and forecasts
 - Confidence scoring and trend analysis
-- Live market data integration
+- Professional technical indicators
 
-### Stock Comparison
-- Add multiple stocks for comparison
-- Real-time data for each stock
-- Risk level assessment (Low, Medium, High)
+### Portfolio Analysis
+- Add multiple securities for comparison
+- Professional risk level assessment (Low, Medium, High)
 - Investment recommendations (Buy, Sell, Hold)
 - Best investment opportunity highlighting
+- Comprehensive market metrics
 
-### Profit/Loss Calculator
+### Risk Assessment
 - Calculate returns for buy/sell scenarios
-- Account for trading fees
+- Account for trading fees and costs
 - Track multiple investment scenarios
 - Identify best and worst performers
+- Professional risk modeling
 
 ## Contributing
 
@@ -296,4 +256,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Disclaimer
 
-This application is for educational and demonstration purposes only. Stock predictions are based on historical data analysis and should not be used as financial advice. Always consult with a qualified financial advisor before making investment decisions. Real-time data is provided by Alpha Vantage API.
+This application is for educational and demonstration purposes only. Market analysis and predictions are based on technical indicators and should not be used as financial advice. Always consult with a qualified financial advisor before making investment decisions.

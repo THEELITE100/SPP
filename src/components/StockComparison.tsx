@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, TrendingUp, TrendingDown, BarChart3, Target, AlertCircle } from 'lucide-react';
+import { Plus, X, Target, AlertCircle, PieChart } from 'lucide-react';
 import { stockApi, StockComparisonData } from '../services/stockApi';
 
 const StockComparison: React.FC = () => {
@@ -10,7 +10,7 @@ const StockComparison: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX', 'JPM', 'JNJ'];
 
   const handleSearch = async (query: string) => {
     if (query.length < 2) {
@@ -49,19 +49,19 @@ const StockComparison: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'text-success-600 bg-success-100 dark:bg-success-900/20';
-      case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
-      case 'high': return 'text-danger-600 bg-danger-100 dark:bg-danger-900/20';
-      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-700';
+      case 'low': return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800';
+      case 'medium': return 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';
+      case 'high': return 'text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+      default: return 'text-slate-600 bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600';
     }
   };
 
   const getRecommendationColor = (rec: string) => {
     switch (rec) {
-      case 'buy': return 'text-success-600 bg-success-100 dark:bg-success-900/20';
-      case 'sell': return 'text-danger-600 bg-danger-100 dark:bg-danger-900/20';
-      case 'hold': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
-      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-700';
+      case 'buy': return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800';
+      case 'sell': return 'text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+      case 'hold': return 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';
+      default: return 'text-slate-600 bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600';
     }
   };
 
@@ -73,18 +73,18 @@ const StockComparison: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          Stock Comparison
+        <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+          Portfolio Analysis & Comparison
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Compare multiple stocks side by side using real-time market data to find the best investment opportunities. 
-          Analyze predicted returns, risk levels, and get personalized recommendations.
+        <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto text-lg">
+          Comprehensive portfolio analysis and side-by-side comparison of multiple securities. 
+          Evaluate risk profiles, performance metrics, and investment opportunities across your portfolio.
         </p>
       </motion.div>
 
@@ -93,7 +93,7 @@ const StockComparison: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="card p-6 max-w-2xl mx-auto"
+        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 max-w-4xl mx-auto"
       >
         <div className="flex gap-4">
           <div className="flex-1 relative">
@@ -105,8 +105,8 @@ const StockComparison: React.FC = () => {
                 setNewStock(value);
                 handleSearch(value);
               }}
-              placeholder="Enter stock symbol (e.g., AAPL)"
-              className="input-field"
+              placeholder="Enter ticker symbol (e.g., AAPL, MSFT, TSLA)"
+              className="w-full px-4 py-4 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               list="comparison-stocks"
             />
             <datalist id="comparison-stocks">
@@ -117,7 +117,7 @@ const StockComparison: React.FC = () => {
             
             {/* Search Results Dropdown */}
             {searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
                 {searchResults.map((symbol) => (
                   <button
                     key={symbol}
@@ -125,7 +125,7 @@ const StockComparison: React.FC = () => {
                       setNewStock(symbol);
                       setSearchResults([]);
                     }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0"
                   >
                     {symbol}
                   </button>
@@ -136,19 +136,19 @@ const StockComparison: React.FC = () => {
           <motion.button
             onClick={addStock}
             disabled={!newStock || loading}
-            className="btn-primary flex items-center gap-2"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-lg flex items-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {loading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Adding...
+                Analyzing...
               </>
             ) : (
               <>
                 <Plus className="w-4 h-4" />
-                Add Stock
+                Add Security
               </>
             )}
           </motion.button>
@@ -160,7 +160,7 @@ const StockComparison: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 max-w-2xl mx-auto"
+          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-4xl mx-auto"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-600" />
@@ -175,35 +175,35 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="card p-6 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border-primary-200 dark:border-primary-700"
+          className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-8 max-w-4xl mx-auto"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <Target className="w-6 h-6 text-primary-600" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Best Investment Opportunity
+          <div className="flex items-center gap-3 mb-6">
+            <Target className="w-7 h-7 text-emerald-600" />
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+              Top Investment Opportunity
             </h3>
           </div>
           {getBestInvestment() && (
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                   {getBestInvestment()!.symbol}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Predicted Return: {getBestInvestment()!.predictedReturn > 0 ? '+' : ''}
+                <p className="text-slate-600 dark:text-slate-400 mb-1">
+                  Expected Return: {getBestInvestment()!.predictedReturn > 0 ? '+' : ''}
                   {getBestInvestment()!.predictedReturn.toFixed(2)}%
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-500">
                   Current: ${getBestInvestment()!.quote.currentPrice.toFixed(2)} 
                   ({getBestInvestment()!.quote.change >= 0 ? '+' : ''}{getBestInvestment()!.quote.changePercent.toFixed(2)}%)
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Current Price</p>
-                <p className="text-lg font-bold text-primary-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Current Price</p>
+                <p className="text-2xl font-bold text-emerald-600">
                   ${getBestInvestment()!.currentPrice.toFixed(2)}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-500">
                   Volume: {getBestInvestment()!.quote.volume.toLocaleString()}
                 </p>
               </div>
@@ -218,24 +218,24 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="card p-6 overflow-x-auto"
+          className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 overflow-x-auto"
         >
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-            Stock Comparison Table
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">
+            Portfolio Analysis
           </h3>
           <div className="min-w-full">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Stock</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Current Price</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Change</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Predicted Price</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Return</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Risk</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Confidence</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Recommendation</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Action</th>
+                <tr className="border-b border-slate-200 dark:border-slate-700">
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Security</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Current Price</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Change</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Target Price</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Expected Return</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Risk Profile</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Confidence</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Action</th>
+                  <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white">Remove</th>
                 </tr>
               </thead>
               <tbody>
@@ -245,67 +245,79 @@ const StockComparison: React.FC = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * index }}
-                    className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   >
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
-                          <span className="text-sm font-bold text-primary-600">
+                    <td className="py-6 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                          <span className="text-sm font-bold text-white">
                             {stock.symbol.charAt(0)}
                           </span>
                         </div>
-                        <span className="font-semibold text-gray-900 dark:text-white">
-                          {stock.symbol}
-                        </span>
+                        <div>
+                          <span className="font-semibold text-slate-900 dark:text-white">
+                            {stock.symbol}
+                          </span>
+                          <p className="text-xs text-slate-500">
+                            Market Cap: ${(stock.quote.marketCap / 1000000000).toFixed(1)}B
+                          </p>
+                        </div>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-gray-900 dark:text-white">
-                      ${stock.currentPrice.toFixed(2)}
+                    <td className="py-6 px-4">
+                      <div>
+                        <span className="font-semibold text-slate-900 dark:text-white">
+                          ${stock.currentPrice.toFixed(2)}
+                        </span>
+                        <p className="text-xs text-slate-500">
+                          P/E: {stock.quote.peRatio.toFixed(1)}
+                        </p>
+                      </div>
                     </td>
-                    <td className="py-4 px-4">
+                    <td className="py-6 px-4">
                       <span className={`font-semibold ${
-                        stock.quote.change >= 0 ? 'text-success-600' : 'text-danger-600'
+                        stock.quote.change >= 0 ? 'text-emerald-600' : 'text-red-600'
                       }`}>
                         {stock.quote.change >= 0 ? '+' : ''}{stock.quote.change.toFixed(2)} ({stock.quote.changePercent.toFixed(2)}%)
                       </span>
                     </td>
-                    <td className="py-4 px-4 text-gray-900 dark:text-white">
+                    <td className="py-6 px-4 text-slate-900 dark:text-white">
                       ${stock.predictedPrice.toFixed(2)}
                     </td>
-                    <td className="py-4 px-4">
+                    <td className="py-6 px-4">
                       <span className={`font-semibold ${
-                        stock.predictedReturn > 0 ? 'text-success-600' : 'text-danger-600'
+                        stock.predictedReturn > 0 ? 'text-emerald-600' : 'text-red-600'
                       }`}>
                         {stock.predictedReturn > 0 ? '+' : ''}{stock.predictedReturn.toFixed(2)}%
                       </span>
                     </td>
-                    <td className="py-4 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(stock.risk)}`}>
+                    <td className="py-6 px-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getRiskColor(stock.risk)}`}>
                         {stock.risk.toUpperCase()}
                       </span>
                     </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                    <td className="py-6 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-20 bg-slate-200 rounded-full h-2 dark:bg-slate-700">
                           <div 
-                            className="bg-primary-600 h-2 rounded-full transition-all duration-500"
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
                             style={{ width: `${stock.confidence}%` }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-sm text-slate-600 dark:text-slate-400 min-w-[3rem]">
                           {stock.confidence.toFixed(0)}%
                         </span>
                       </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRecommendationColor(stock.recommendation)}`}>
+                    <td className="py-6 px-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getRecommendationColor(stock.recommendation)}`}>
                         {stock.recommendation.toUpperCase()}
                       </span>
                     </td>
-                    <td className="py-4 px-4">
+                    <td className="py-6 px-4">
                       <motion.button
                         onClick={() => removeStock(stock.symbol)}
-                        className="text-gray-400 hover:text-danger-600 transition-colors"
+                        className="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
@@ -326,14 +338,15 @@ const StockComparison: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="card p-12 text-center"
+          className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-16 text-center"
         >
-          <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            No Stocks Added
+          <PieChart className="w-20 h-20 text-slate-400 mx-auto mb-6" />
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+            No Securities Added
           </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Add stocks above to start comparing their performance and predictions using real-time market data.
+          <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+            Add securities above to begin portfolio analysis and comparison. 
+            Evaluate performance metrics, risk profiles, and investment opportunities.
           </p>
         </motion.div>
       )}

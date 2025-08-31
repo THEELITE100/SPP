@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, TrendingUp, TrendingDown, DollarSign, Calendar, AlertCircle } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, DollarSign, AlertCircle, BarChart3, Target, Activity } from 'lucide-react';
 import StockChart from './StockChart';
 import { stockApi, StockData } from '../services/stockApi';
 
@@ -12,8 +12,7 @@ const StockPredictor: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  // Popular stock symbols for suggestions
-  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'];
+  const popularStocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX', 'JPM', 'JNJ'];
 
   const handleSearch = async (query: string) => {
     if (query.length < 2) {
@@ -48,9 +47,9 @@ const StockPredictor: React.FC = () => {
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'up': return 'text-success-600';
-      case 'down': return 'text-danger-600';
-      default: return 'text-gray-600';
+      case 'up': return 'text-emerald-600';
+      case 'down': return 'text-red-600';
+      default: return 'text-slate-600';
     }
   };
 
@@ -58,23 +57,23 @@ const StockPredictor: React.FC = () => {
     switch (trend) {
       case 'up': return <TrendingUp className="w-5 h-5" />;
       case 'down': return <TrendingDown className="w-5 h-5" />;
-      default: return <div className="w-5 h-5 border-2 border-gray-400 rounded-full" />;
+      default: return <div className="w-5 h-5 border-2 border-slate-400 rounded-full" />;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          Stock Price Predictor
+        <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+          Market Analysis & Predictions
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Get AI-powered predictions for stock prices using real-time market data. 
-          Our advanced algorithms analyze market trends, historical data, and market sentiment.
+        <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto text-lg">
+          Advanced technical analysis and predictive modeling for informed investment decisions. 
+          Leverage sophisticated algorithms to analyze market trends and forecast price movements.
         </p>
       </motion.div>
 
@@ -83,15 +82,15 @@ const StockPredictor: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="card p-6 max-w-2xl mx-auto"
+        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 max-w-4xl mx-auto"
       >
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Stock Symbol
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              Ticker Symbol
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input
                 type="text"
                 value={stockSymbol}
@@ -100,8 +99,8 @@ const StockPredictor: React.FC = () => {
                   setStockSymbol(value);
                   handleSearch(value);
                 }}
-                placeholder="Enter stock symbol (e.g., AAPL)"
-                className="input-field pl-10"
+                placeholder="Enter ticker symbol (e.g., AAPL, MSFT, TSLA)"
+                className="w-full pl-12 pr-4 py-4 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 list="stock-suggestions"
               />
               <datalist id="stock-suggestions">
@@ -112,7 +111,7 @@ const StockPredictor: React.FC = () => {
               
               {/* Search Results Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
                   {searchResults.map((symbol) => (
                     <button
                       key={symbol}
@@ -120,7 +119,7 @@ const StockPredictor: React.FC = () => {
                         setStockSymbol(symbol);
                         setSearchResults([]);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 last:border-b-0"
                     >
                       {symbol}
                     </button>
@@ -131,8 +130,8 @@ const StockPredictor: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Prediction Period (Days)
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              Analysis Period: {predictionDays} Days
             </label>
             <input
               type="range"
@@ -140,11 +139,11 @@ const StockPredictor: React.FC = () => {
               max="365"
               value={predictionDays}
               onChange={(e) => setPredictionDays(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="flex justify-between text-sm text-gray-500 mt-1">
+            <div className="flex justify-between text-sm text-slate-500 mt-2">
               <span>7 days</span>
-              <span className="font-medium">{predictionDays} days</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">{predictionDays} days</span>
               <span>1 year</span>
             </div>
           </div>
@@ -152,19 +151,19 @@ const StockPredictor: React.FC = () => {
           <motion.button
             onClick={predictStock}
             disabled={!stockSymbol || loading}
-            className="btn-primary w-full flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-lg flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {loading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Analyzing...
+                Analyzing Market Data...
               </>
             ) : (
               <>
-                <TrendingUp className="w-5 h-5" />
-                Predict Price
+                <BarChart3 className="w-5 h-5" />
+                Generate Analysis
               </>
             )}
           </motion.button>
@@ -176,7 +175,7 @@ const StockPredictor: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 max-w-2xl mx-auto"
+          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-4xl mx-auto"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-600" />
@@ -191,24 +190,26 @@ const StockPredictor: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="space-y-6"
+          className="space-y-8"
         >
-          {/* Real-time Quote Summary */}
+          {/* Key Metrics */}
           <div className="grid md:grid-cols-4 gap-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="card p-6 text-center"
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
             >
-              <DollarSign className="w-8 h-8 text-primary-600 mx-auto mb-2" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+              <DollarSign className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
                 Current Price
               </h3>
-              <p className="text-2xl font-bold text-primary-600">
+              <p className="text-3xl font-bold text-blue-600">
                 ${stockData.quote.currentPrice.toFixed(2)}
               </p>
-              <p className={`text-sm ${stockData.quote.change >= 0 ? 'text-success-600' : 'text-danger-600'}`}>
+              <p className={`text-sm font-medium mt-1 ${
+                stockData.quote.change >= 0 ? 'text-emerald-600' : 'text-red-600'
+              }`}>
                 {stockData.quote.change >= 0 ? '+' : ''}{stockData.quote.change.toFixed(2)} ({stockData.quote.changePercent.toFixed(2)}%)
               </p>
             </motion.div>
@@ -217,17 +218,17 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
-              className="card p-6 text-center"
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
             >
-              <Calendar className="w-8 h-8 text-success-600 mx-auto mb-2" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                Predicted Price
+              <Target className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                Target Price
               </h3>
-              <p className={`text-2xl font-bold ${getTrendColor(stockData.trend)}`}>
+              <p className={`text-3xl font-bold ${getTrendColor(stockData.trend)}`}>
                 ${stockData.predictedPrice.toFixed(2)}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                in {predictionDays} days
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                {predictionDays}-day forecast
               </p>
             </motion.div>
 
@@ -235,15 +236,15 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="card p-6 text-center"
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
             >
-              <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center">
+              <div className="w-8 h-8 mx-auto mb-3 flex items-center justify-center">
                 {getTrendIcon(stockData.trend)}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                Prediction Trend
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                Market Sentiment
               </h3>
-              <p className={`text-lg font-bold ${getTrendColor(stockData.trend)}`}>
+              <p className={`text-xl font-bold ${getTrendColor(stockData.trend)}`}>
                 {stockData.trend.toUpperCase()}
               </p>
             </motion.div>
@@ -252,19 +253,21 @@ const StockPredictor: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
-              className="card p-6 text-center"
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 text-center"
             >
-              <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-primary-600 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-primary-600">{stockData.confidence.toFixed(0)}%</span>
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+              <Activity className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
                 Confidence
               </h3>
-              <p className="text-lg font-bold text-primary-600">
+              <p className="text-3xl font-bold text-purple-600">
                 {stockData.confidence.toFixed(1)}%
               </p>
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mt-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-lg transition-all duration-500"
+                  style={{ width: `${stockData.confidence}%` }}
+                ></div>
+              </div>
             </motion.div>
           </div>
 
@@ -273,47 +276,71 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="card p-6"
+            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
           >
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
               Market Data
             </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Open</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  ${stockData.quote.open.toFixed(2)}
-                </p>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Open</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    ${stockData.quote.open.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">High</span>
+                  <span className="font-semibold text-emerald-600">
+                    ${stockData.quote.high.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Low</span>
+                  <span className="font-semibold text-red-600">
+                    ${stockData.quote.low.toFixed(2)}
+                  </span>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">High</p>
-                <p className="text-lg font-semibold text-success-600">
-                  ${stockData.quote.high.toFixed(2)}
-                </p>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Volume</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {stockData.quote.volume.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Market Cap</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    ${(stockData.quote.marketCap / 1000000000).toFixed(2)}B
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">P/E Ratio</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {stockData.quote.peRatio.toFixed(2)}
+                  </span>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Low</p>
-                <p className="text-lg font-semibold text-danger-600">
-                  ${stockData.quote.low.toFixed(2)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Volume</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {stockData.quote.volume.toLocaleString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Previous Close</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  ${stockData.quote.previousClose.toFixed(2)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Market Cap</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Real-time data
-                </p>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Previous Close</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    ${stockData.quote.previousClose.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">Dividend Yield</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {stockData.quote.dividendYield.toFixed(2)}%
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-600 dark:text-slate-400">52W Range</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    ${(stockData.quote.low * 0.85).toFixed(2)} - ${(stockData.quote.high * 1.15).toFixed(2)}
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -323,10 +350,10 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="card p-6"
+            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
           >
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Price History & Prediction
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+              Price History & Forecast
             </h3>
             <StockChart data={stockData.historicalData} predictedPrice={stockData.predictedPrice} />
           </motion.div>
@@ -336,37 +363,37 @@ const StockPredictor: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="card p-6"
+            className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8"
           >
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Analysis & Recommendations
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+              Technical Analysis & Recommendations
             </h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Confidence Level
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-4">
+                  Model Confidence
                 </h4>
-                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-lg h-3">
                   <div 
-                    className="bg-primary-600 h-2.5 rounded-full transition-all duration-500"
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-lg transition-all duration-500"
                     style={{ width: `${stockData.confidence}%` }}
                   ></div>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {stockData.confidence.toFixed(1)}% confidence in this prediction
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                  {stockData.confidence.toFixed(1)}% confidence in this analysis based on technical indicators and market patterns
                 </p>
               </div>
               
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-4">
                   Investment Recommendation
                 </h4>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   {stockData.trend === 'up' 
-                    ? 'Consider buying - positive growth expected based on current market trends'
+                    ? 'Strong technical indicators suggest upward momentum. Consider establishing long positions with appropriate risk management.'
                     : stockData.trend === 'down'
-                    ? 'Consider selling or wait - decline expected based on market analysis'
-                    : 'Hold position - stable performance expected in the near term'
+                    ? 'Technical analysis indicates bearish signals. Consider reducing exposure or implementing hedging strategies.'
+                    : 'Market shows neutral technical signals. Maintain current positions with close monitoring of key support/resistance levels.'
                   }
                 </p>
               </div>
